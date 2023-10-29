@@ -29,13 +29,15 @@ const getCurrencies = async () => {
 };
 
 export default async function SearchCombobox({}: Props) {
-    const currencies = await getCurrencies();
+  const currencies = await getCurrencies();
 
   return (
     <Command className="bg-transparent w-full items-center">
       <div className="w-full max-w-[60rem]">
         <div className="flex w-full">
-          <CommandInput placeholder="Search for an anime..." className="w-full h-14 rounded-r-none dark:ring-0 dark:focus:outline-none" />
+          <div className="flex-1">
+            <CommandInput placeholder="Search for a currency..." className="h-14 rounded-r-none dark:ring-0 dark:focus:outline-none" />
+          </div>
           <Button className="h-14 bg-sx-primary rounded-l-none dark:hover:bg-sx-primary/95">
             <SearchIcon />
           </Button>
