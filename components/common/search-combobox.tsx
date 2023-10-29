@@ -47,7 +47,7 @@ export default async function SearchCombobox({}: Props) {
           <CommandGroup>
             {currencies.map((currency) => (
               <CommandItem key={currency.key} className="flex items-center gap-3 p-0">
-                <Link href={`/exchange/${currency.key}`} className="p-4 w-full">
+                <Link href={`/rates/${currency.key}`} className="p-4 w-full">
                   {!!currency.name?.trim() ? currency.name : currency.key.toUpperCase()}
                   <span className="uppercase ml-1">({currency.key})</span>
                 </Link>
