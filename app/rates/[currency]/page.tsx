@@ -131,7 +131,7 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="flex min-h-[calc(100vh-100px)] flex-col items-center p-24 bg-[url(/images/bg_cover.png)] bg-no-repeat bg-center">
+    <main className="flex min-h-[calc(100vh-100px)] flex-col items-center p-12 sm:p-24 bg-[url(/images/bg_cover.png)] bg-no-repeat bg-center">
       <div className="flex items-center justify-between py-4 w-full">
         <Input
           placeholder="Filter currency..."

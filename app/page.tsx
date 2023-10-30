@@ -3,11 +3,13 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="flex min-h-[calc(100vh-100px)] flex-col items-center p-24 bg-[url(/images/bg_cover.png)] bg-no-repeat bg-center">
-      <div className="flex w-full gap-3 flex-col md:flex-row">
-        <div className="basis-1/2">
-          <h4 className="font-body text-xl">Unveiling the Secrets of Anime Worlds:</h4>
-          <h1 className="text-4xl font-bold font-lato">Explore, Discover, and Dive Deep into the Fascinating Universe of Anime Facts</h1>
+    <main className="flex min-h-[calc(100vh-100px)] flex-col items-center p-12 sm:p-24  bg-[url(/images/bg_cover.png)] bg-no-repeat bg-center">
+      <div className="flex w-full justify-center">
+        <div className="max-w-[800px] text-center">
+          <h4 className="font-body text-xl">
+            Your Passport to Global Finances - Stay Ahead with Real-Time Exchange Rates and Expert Insights. Unravel the Currency Maze, Make Informed Decisions.
+          </h4>
+          <h1 className="text-4xl font-bold font-lato">Navigating the World of Currency, One Rate at a Time.</h1>
         </div>
       </div>
 
