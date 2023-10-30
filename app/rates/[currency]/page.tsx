@@ -19,6 +19,8 @@ import {
 } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, RefreshCwIcon } from "lucide-react";
 
 interface IExchangeRates {
   rate: number;
@@ -56,16 +58,24 @@ const columns: ColumnDef<IExchangeRates>[] = [
     id: "#",
     header: "#",
     cell: ({ row }) => <span className="font-medium uppercase">{row.index + 1}</span>,
+    enableSorting: false,
   },
   {
     id: "base",
     header: "Base Currency",
     cell: ({ row }) => <span className="font-medium uppercase">{row.original.base}</span>,
+    enableSorting: false,
   },
   {
     id: "currency",
-    header: "Currency",
-    cell: ({ row }) => <span className="font-medium uppercase">{row.original.currency}</span>,
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting()}>
+        Currency
+        {column.getIsSorted() !== "asc" ? <ArrowDownIcon className="ml-2 h-4 w-4" /> : <ArrowUpIcon className="ml-2 h-4 w-4" />}
+      </Button>
+    ),
+    cell: ({ row }) => <span className="font-medium uppercase px-4 py-2">{row.original.currency}</span>,
+    accessorKey: "currency",
   },
   {
     id: "rate",
@@ -79,6 +89,7 @@ const columns: ColumnDef<IExchangeRates>[] = [
         </span>
       </div>
     ),
+    enableSorting: true,
   },
 ];
 
@@ -103,7 +114,7 @@ export default function Page() {
     },
   });
 
-  useEffect(() => {
+  const fetchData = () => {
     setLoading(true);
     getExchangeRates((params?.currency as string) ?? "")
       .then((data) => setData(data))
@@ -112,68 +123,102 @@ export default function Page() {
           setLoading(false);
         }, 800)
       );
-  }, [params?.currency]);
+  };
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="flex min-h-[calc(100vh-100px)] flex-col items-center p-24 bg-[url(/images/bg_cover.png)] bg-no-repeat bg-center">
-      <Table>
-        <TableCaption>
-          Exchange rates for base currency: <b className="uppercase">{params.currency}</b>.
-        </TableCaption>
-        <TableHeader>
-          <TableRow>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <React.Fragment key={headerGroup.id}>
-                {headerGroup.headers.map((header, i) => (
-                  <TableHead
-                    className={cn({
-                      "w-8": i === 0,
-                      "text-right": header.id === "rate",
-                    })}
-                    key={header.id}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </React.Fragment>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {loading ? (
-            <>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <TableRow key={`${i}`}>
-                  <TableCell className="font-medium uppercase">
-                    <Skeleton className="w-full h-6" />
-                  </TableCell>
-                  <TableCell className="font-medium uppercase">
-                    <Skeleton className="w-full h-6" />
-                  </TableCell>
-                  <TableCell className="font-medium uppercase">
-                    <Skeleton className="w-full h-6" />
-                  </TableCell>
-                  <TableCell className="text-righ">
-                    <Skeleton className="w-full h-6" />
-                  </TableCell>
-                </TableRow>
+      <div className="flex items-center justify-between py-4 w-full">
+        <Input
+          placeholder="Filter currency..."
+          value={(table.getColumn("currency")?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn("currency")?.setFilterValue(event.target.value)}
+          className="max-w-sm"
+        />
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            table.resetColumnFilters();
+            table.resetSorting();
+            fetchData();
+          }}
+        >
+          Refresh
+        </Button>
+      </div>
+      <div className="rounded-md border w-full pb-2">
+        <Table>
+          <TableCaption>
+            Exchange rates for base currency: <b className="uppercase">{params.currency}</b>.
+          </TableCaption>
+          <TableHeader>
+            <TableRow>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <React.Fragment key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      className={cn({
+                        "w-12": header.id === "#",
+                        "text-right": header.id === "rate",
+                      })}
+                      key={header.id}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  ))}
+                </React.Fragment>
               ))}
-            </>
-          ) : (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell className="font-medium uppercase" key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <>
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <TableRow key={`${i}`}>
+                    <TableCell className="font-medium uppercase">
+                      <Skeleton className="w-12 h-6" />
+                    </TableCell>
+                    <TableCell className="font-medium uppercase">
+                      <Skeleton className="w-full h-6" />
+                    </TableCell>
+                    <TableCell className="font-medium uppercase">
+                      <Skeleton className="w-full h-6" />
+                    </TableCell>
+                    <TableCell className="text-righ">
+                      <Skeleton className="w-full h-6" />
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+              </>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      className={cn("font-medium uppercase min-w-min", {
+                        "w-12": cell.id === "#",
+                        "text-right": cell.id === "rate",
+                      })}
+                      key={cell.id}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
       <div className=" w-full flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">{table.getPageCount()}</div>
+        <div className="flex-1 text-sm text-muted-foreground">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </div>
         <div className="space-x-2">
           <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
             Previous
