@@ -1,7 +1,6 @@
 import { SearchIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../ui/command";
-import { useState } from "react";
 
 import Link from "next/link";
 import { Card } from "../ui/card";

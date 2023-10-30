@@ -1,5 +1,4 @@
 import SearchCombobox from "@/components/common/search-combobox";
-import Image from "next/image";
 
 export default function Home() {
   return (

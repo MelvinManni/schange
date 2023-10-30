@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, RefreshCwIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
 interface IExchangeRates {
   rate: number;
@@ -132,16 +132,17 @@ export default function Page() {
 
   return (
     <main className="flex min-h-[calc(100vh-100px)] flex-col items-center p-12 sm:p-24 bg-[url(/images/bg_cover.png)] bg-no-repeat bg-center">
-      <div className="flex items-center justify-between py-4 w-full">
+      <div className="flex items-center justify-between py-4 w-full sm:flex-row flex-col gap-2">
         <Input
           placeholder="Filter currency..."
           value={(table.getColumn("currency")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("currency")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
+          className=" sm:max-w-sm"
         />
         <Button
           size="sm"
           variant="outline"
+          className="w-full sm:w-auto"
           onClick={() => {
             table.resetColumnFilters();
             table.resetSorting();
