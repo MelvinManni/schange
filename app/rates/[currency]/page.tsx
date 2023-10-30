@@ -34,7 +34,7 @@ interface ICurrencyExchanges {
   date?: string;
 }
 
-export const getExchangeRates = async (currency: string) => {
+const getExchangeRates = async (currency: string) => {
   const res = await fetch(`${API_URL}/currencies/${currency}.json`);
   const data = await res.json();
 
